@@ -1,0 +1,785 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>프로그래머스) 소수 만들기 | YeonDoIt</title>
+<meta name="description" content="문제">
+
+
+  <meta name="author" content="YeonDoIt">
+  
+  <meta property="article:author" content="YeonDoIt">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="YeonDoIt">
+<meta property="og:title" content="프로그래머스) 소수 만들기">
+<meta property="og:url" content="http://localhost:4000/algorithm/AlgorithmPrimeNumber/">
+
+
+  <meta property="og:description" content="문제">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2024-01-13T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/algorithm/AlgorithmPrimeNumber/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "정연재",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+  <meta name="naver-site-verification" content="3f693e7bc7a7fde2a29ac0d27320a26209d3ac00">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="YeonDoIt Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/bakha.jpeg" alt="YeonDoIt"></a>
+        
+        <a class="site-title" href="/">
+          YeonDoIt
+          <span class="site-subtitle">개발 블로그</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="/search/">Search</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">토글 메뉴</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/" itemprop="item"><span itemprop="name">Home</span></a>
+
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#algorithm" itemprop="item"><span itemprop="name">Algorithm</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">프로그래머스) 소수 만들기</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">토글 메뉴</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title"></span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/">Category</a></li>
+          
+            <li><a href="/tags/">Tag</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="프로그래머스) 소수 만들기">
+    <meta itemprop="description" content="문제">
+    <meta itemprop="datePublished" content="2024-01-13T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="http://localhost:4000/algorithm/AlgorithmPrimeNumber/" class="u-url" itemprop="url">프로그래머스) 소수 만들기
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2024-01-13T00:00:00+09:00">2024-01-13</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 분 소요
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On This Page</h4></header>
+              <ul class="toc__menu"><li><a href="#문제">문제</a><ul><li><a href="#문제-설명">문제 설명</a></li><li><a href="#제한사항">제한사항</a></li><li><a href="#입출력-예">입출력 예</a></li><li><a href="#입출력-예-설명">입출력 예 설명</a></li></ul></li></ul></li><li><a href="#풀이">풀이</a><ul><li><a href="#1--nums-배열에서-서로-다른-3개의-수를-어떻게-가져올-것인가">1 . nums 배열에서 서로 다른 3개의 수를 어떻게 가져올 것인가.</a></li><li><a href="#2--소수를-어떻게-판별할-것인가">2 . 소수를 어떻게 판별할 것인가.</a></li></ul></li><li><a href="#정리">정리</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h1 id="문제">문제</h1>
+
+<h3 id="문제-설명"><strong>문제 설명</strong></h3>
+
+<p>주어진 숫자 중 3개의 수를 더했을 때 소수가 되는 경우의 개수를 구하려고 합니다. 숫자들이 들어있는 배열 nums가 매개변수로 주어질 때, nums에 있는 숫자들 중 서로 다른 3개를 골라 더했을 때 소수가 되는 경우의 개수를 return 하도록 solution 함수를 완성해주세요.</p>
+
+<h3 id="제한사항">제한사항</h3>
+
+<ul>
+  <li>nums에 들어있는 숫자의 개수는 3개 이상 50개 이하입니다.</li>
+  <li>nums의 각 원소는 1 이상 1,000 이하의 자연수이며, 중복된 숫자가 들어있지 않습니다.</li>
+</ul>
+
+<h3 id="입출력-예">입출력 예</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>nums</th>
+      <th>result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>[1,2,3,4]</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>[1,2,7,6,4]</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="입출력-예-설명">입출력 예 설명</h3>
+
+<p>입출력 예 #1</p>
+
+<p>[1,2,4]를 이용해서 7을 만들 수 있습니다.</p>
+
+<p>입출력 예 #2</p>
+
+<p>[1,2,4]를 이용해서 7을 만들 수 있습니다.</p>
+
+<p>[1,4,6]을 이용해서 11을 만들 수 있습니다.</p>
+
+<p>[2,4,7]을 이용해서 13을 만들 수 있습니다.</p>
+
+<p>[4,6,7]을 이용해서 17을 만들 수 있습니다.</p>
+
+<h1 id="풀이">풀이</h1>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+	<span class="kd">public</span> <span class="kt">int</span> <span class="nf">solution</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>    
+		<span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+		<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+		    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+		        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span> <span class="o">{</span>
+		            <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">+</span> <span class="n">nums</span><span class="o">[</span><span class="n">k</span><span class="o">];</span>
+		            <span class="kt">int</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+		            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">num</span><span class="o">;</span> <span class="n">m</span><span class="o">++)</span> <span class="o">{</span>
+		                <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">%</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+		                    <span class="k">break</span><span class="o">;</span>
+		                <span class="k">else</span>
+		                    <span class="n">cnt</span><span class="o">++;</span>
+		            <span class="o">}</span>
+		            <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">==</span> <span class="n">cnt</span><span class="o">)</span>
+		                    <span class="n">answer</span><span class="o">++;</span>
+				    <span class="o">}</span>
+				<span class="o">}</span>
+		<span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">answer</span><span class="o">;</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>내가 푼 풀이 방법이다.</p>
+
+<p>위의 문제를 해결하기 위해서 크게 두 가지를 생각했다.</p>
+
+<ol>
+  <li>nums 배열에서 서로 다른 3개의 수를 어떻게 가져올 것인가.</li>
+  <li>소수를 어떻게 판별할 것인가.</li>
+</ol>
+
+<h2 id="1--nums-배열에서-서로-다른-3개의-수를-어떻게-가져올-것인가">1 . nums 배열에서 서로 다른 3개의 수를 어떻게 가져올 것인가.</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+		    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+		        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span> <span class="o">{</span>
+</code></pre></div></div>
+
+<p>for문 3개를 사용했다.</p>
+
+<p>위의 코드를 사용하면 i, j, k 변수가 반복문을 돌면서 숫자 3개의 배열 인덱스를 가져오는 모든 경우를 다룰 수 있다.</p>
+
+<h2 id="2--소수를-어떻게-판별할-것인가">2 . 소수를 어떻게 판별할 것인가.</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	
+	<span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">+</span> <span class="n">nums</span><span class="o">[</span><span class="n">k</span><span class="o">];</span>
+	<span class="kt">int</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+	<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">num</span><span class="o">;</span> <span class="n">m</span><span class="o">++)</span> <span class="o">{</span>
+		<span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">%</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+			<span class="k">break</span><span class="o">;</span>
+		<span class="k">else</span>
+			<span class="n">cnt</span><span class="o">++;</span>
+	<span class="o">}</span>
+	<span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">==</span> <span class="n">cnt</span><span class="o">)</span>
+		<span class="n">answer</span><span class="o">++;</span>
+</code></pre></div></div>
+
+<p>소수는 약수가 1과 자기 자신인 수이다.</p>
+
+<p>num을 1과 num사이의 수로 나눴을 때, 하나라도 나누어 떨어지면 소수가 아니고, <strong>모든 수가 나누어 떨어지지 않아야 소수</strong>이다.</p>
+
+<p>cnt는 나누어 떨어지지 않는 횟수를 세기 위한 변수이다.</p>
+
+<p>num이 소수라면 cnt와 (num - 2)가 같아진다.</p>
+
+<p>소수를 검사할 때 1과 자기자신은 모든 수의 약수이기 때문에 -2를 해주었다.</p>
+
+<p>예를 들어, 7이라는 수는 소수이다. 이를 알기 위해 우리는 7을 1 ~ 7 사이의 수들을 나누었을 때 나누어 떨어지지 않는다. 1과 7을 제외하고 2, 3, 4, 5, 6 총 5개의 수가 나누어 떨어지지 않는다.</p>
+
+<p>ex) num - 2 == cnt → 7 - 2 = 5</p>
+
+<h1 id="정리">정리</h1>
+
+<p>내가 짠 코드는 for 반복문이 3번이나 쓰인다.</p>
+
+<p>시간 복잡도가 O(n^3)나 된다는 말이다.</p>
+
+<p>하지만, 혼자 고민도 하고 열심히 찾아본 결과 어쩔 수 없이 위의 코드를 짜야 할 것 같다.</p>
+
+<p>(배열에서 중복 없이 숫자 3개를 꺼내오는 좋은 방법이 있을까….)</p>
+
+<p>소수를 판별하는 더 좋은 방법이 있을 것 같아서 문제를 풀고 나서 찾아봤다.</p>
+
+<ul>
+  <li>2부터 num 의 제곱근의 정수부분까지만 검사하는 방법</li>
+  <li>에라토스테네스의 체를 이용하는 방법</li>
+</ul>
+
+<p>이렇게 두 가지 방법이 더 있다.</p>
+
+<p>첫 번째 방법은 내가 풀이한 방법에서 수정할 수 있는 방향이 있다.</p>
+
+<p>두 번째 방법인 에라토스테네스의 체를 이용하는 것은 위의 문제를 풀이하는 데에 조금 어려움이 있다.</p>
+
+<p>왜냐하면 에라토스테네스는 소수인 수의 배수들을 지워나가면서 소수를 찾는 방법인데 위의 문제는 주어진 수가 소수인가를 판별하는 문제이기 때문에 문제를 해결하는 방향에 있어 두 개가 다르다고 생각한다.</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 태그: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#algorithm" class="page__taxonomy-item p-category" rel="tag">Algorithm</a><span class="sep">, </span>
+    
+      <a href="/tags/#codingtest" class="page__taxonomy-item p-category" rel="tag">CodingTest</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 카테고리: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#algorithm" class="page__taxonomy-item p-category" rel="tag">Algorithm</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 업데이트:</strong> <time class="dt-published" datetime="2024-01-13T00:00:00+09:00">2024-01-13</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">공유하기</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4%29+%EC%86%8C%EC%88%98+%EB%A7%8C%EB%93%A4%EA%B8%B0%20http%3A%2F%2Flocalhost%3A4000%2Falgorithm%2FAlgorithmPrimeNumber%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Falgorithm%2FAlgorithmPrimeNumber%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Falgorithm%2FAlgorithmPrimeNumber%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/review/SsafyReview/" class="pagination--pager" title="싸피 11기 인터뷰 탈락 후기(광주)
+">이전</a>
+    
+    
+      <a href="/java/AbstractClass,Interface/" class="pagination--pager" title="[JAVA]추상 클래스와 인터페이스
+">다음</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h2 class="page__related-title">참고</h2>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/java/MVC/" rel="permalink">[JAVA]MVC 패턴에 대해 알아보자.
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2024-01-22T00:00:00+09:00">2024-01-22</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          2 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">이 글은 필자가 자바를 공부하기 위해 쓴 글이다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/java/JDBC/" rel="permalink">[JAVA]JDBC 개념을 알고, 실습해보자.
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2024-01-21T00:00:00+09:00">2024-01-21</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          1 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">JDBC 개념
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/java/AbstractClass,Interface/" rel="permalink">[JAVA]추상 클래스와 인터페이스
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2024-01-20T00:00:00+09:00">2024-01-20</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          1 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">공통점
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/review/SsafyReview/" rel="permalink">싸피 11기 인터뷰 탈락 후기(광주)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2023-12-22T00:00:00+09:00">2023-12-22</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          2 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">지원 동기
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>팔로우:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://github.com/yeonjaeman" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> 피드</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2024 정연재. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'YeonjaeMan/comments');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+
+  </body>
+</html>

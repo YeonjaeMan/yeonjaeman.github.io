@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-01-22T22:35:24+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">YeonDoIt</title><subtitle>You can do it like that.</subtitle><author><name>YeonDoIt</name></author><entry><title type="html">[JAVA]MVC 패턴에 대해 알아보자.</title><link href="http://localhost:4000/java/MVC/" rel="alternate" type="text/html" title="[JAVA]MVC 패턴에 대해 알아보자." /><published>2024-01-22T00:00:00+09:00</published><updated>2024-01-22T00:00:00+09:00</updated><id>http://localhost:4000/java/MVC</id><content type="html" xml:base="http://localhost:4000/java/MVC/"><![CDATA[<p>이 글은 필자가 자바를 공부하기 위해 쓴 글이다.</p>
+
+<p>MVC 패턴에 대해 처음 공부해서 부족한 부분이 많다.</p>
+
+<p>잘못된 부분이 있으면 댓글로 남겨주길 바란다.</p>
+
+<h1 id="mvc-패턴이란">MVC 패턴이란?</h1>
+<p>MVC는 Model, View, Controller 3가지 용어의 약자이다.</p>
+
+<p>Model은 데이터를 다루는 부분으로 데이터베이스 관련 로직이 들어간다.</p>
+
+<p>View는 사용자 화면에 보여지는 부분으로 결과값 출력이 들어간다.</p>
+
+<p>Controller는 Model과 View를 연결해주는 부분으로 사용자가 어떤 입력을 하면 그것을 데이터로 변환시켜준다.</p>
+
+<h1 id="실습">실습</h1>
+
+<p>최근에 배운 JDBC를 이용한 코드를 MVC 패턴으로 만들어보자.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class Main {
+    public static void main(String[] args) {
+        
+        Scanner sc = new Scanner(System.in);
+
+        while(true) {
+            System.out.println("[1]회원가입 [2]로그인 [3]회원탈퇴 [4]회원조회 [5]회원수정")
+            int input = sc.nextInt();
+
+                        ....
+
+            else if(input == 4) {
+                System.out.println("=============회원 정보 조회=============");
+                System.out.println("ID\t이름\t나이\t점수");
+
+                Connection conn = null;
+                PreparedStatement psmt = null;
+                ResultSet rs = null;
+
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+
+                    String url = "jdbc:mysql://localhost/mydb";
+                    String user = "root";
+                    String password = "glqkfl247";
+
+                    conn = DriverManager.getConnection(url, user, password);
+
+                    String sql = "SELECT * FROM mydb.bigdatamember";
+                    psmt = conn.prepareStatement(sql);
+
+                    rs = psmt.executeQuery();
+
+                    while(rs.next()) {
+                        System.out.println(rs.getString("id")  + "\t" + rs.getString("b_name") + "\t" + rs.getInt("age") + "\t" + rs.getInt("score"));
+                    }
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                } finally {
+                    try {
+                        if(rs != null)
+                            rs.close();
+                        if(psmt != null)
+                            psmt.close();
+                        if(conn != null)
+                            conn.close();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                        ....
+
+            }
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>위의 4번 회원조회 코드를 Model과 View 부분으로 나누어 보겠다.</p>
+
+<h1 id="model">Model</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class MemberDAO {
+
+    public ArrayList&lt;MemberDTO&gt; selectAll() {
+        Connection conn = null;
+        PreparedStatement psmt = null;
+        ResultSet rs = null;
+        ArrayList&lt;MemberDTO&gt; dtoList = new ArrayList&lt;MemberDTO&gt;();
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            String url = "jdbc:mysql://localhost/mydb";
+            String user = "root";
+            String password = "glqkfl247";
+
+            conn = DriverManager.getConnection(url, user, password);
+
+            String sql = "SELECT * FROM mydb.bigdatamember";
+            psmt = conn.prepareStatement(sql);
+
+            rs = psmt.executeQuery();
+
+            while(rs.next()) {
+                MemberDTO dto = new MemberDTO(rs.getString("id"), rs.getString("pw"), rs.getString("b_name"), rs.getInt("age"), re.getInt("score"));
+                dtoList.add(dto);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if(rs != null)
+                    rs.close();
+                if(psmt != null)
+                    psmt.close();
+                if(conn != null)
+                    conn.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        
+        return dtoList;
+    }
+}
+</code></pre></div></div>
+
+<h1 id="view">View</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        else if(input == 4) {
+            System.out.println("=============회원 정보 조회=============");
+            System.out.println("ID\t이름\t나이\t점수");
+
+            MemberDAO dao = new MemberDAO();
+            ArrayList&lt;MemberDTO&gt; dtoList = dao.selectAll();
+
+            for(MemberDTO dto : dtoList) {
+                    System.out.println(dto.getId() + "\t" + dto.getName() + "\t" + dto.getAge() + "\t" + dto.getScore());
+            }
+
+        }
+</code></pre></div></div>
+
+<h1 id="해결한-방법">해결한 방법</h1>
+<p>처음에 MemberDAO에서 selectAll() 메소드를 짜기 시작했을 때 리턴타입을 MemberDTO로 해주고 Main 메소드에서 반복문을 통해 회원조회를 하려고 했다.</p>
+
+<p>이 방법은 계속해서 JDBC의 통로를 열고 닫고 하는 과정을 통해 반환해주는 MemberDTO가 반복할 때마다 초기화되었다.</p>
+
+<p>결국 모든 회원 정보는 보이지 않고, 무한루프에 빠져 한명의 회원의 정보만 보였다.</p>
+
+<hr />
+
+<p>다음으로 배열을 리턴타입으로 설정했다.</p>
+
+<p>이것은 배열의 크기를 정해주어야 하는 문제가 있었다.</p>
+
+<p>배열의 크기를 정해주면 데이터베이스에서 모든 회원의 정보를 가져올 때마다 배열의 크기를 바꿔주어야 한다.</p>
+
+<hr />
+
+<p>배열의 문제점을 해결하기 위해 ArrayList를 이용했다.</p>
+
+<p>ArrayList를 사용하면 배열의 길이가 자유롭고, 요소의 추가, 삭제를 자유롭게 할 수 있어 알맞았다.</p>
+
+<p>(Main에서 for-each문을 통해 회원들의 정보를 출력했다.)</p>]]></content><author><name>YeonDoIt</name></author><category term="JAVA" /><category term="Java" /><category term="JDBC" /><category term="DataBase" /><category term="MVC" /><summary type="html"><![CDATA[이 글은 필자가 자바를 공부하기 위해 쓴 글이다.]]></summary></entry><entry><title type="html">[JAVA]JDBC 개념을 알고, 실습해보자.</title><link href="http://localhost:4000/java/JDBC/" rel="alternate" type="text/html" title="[JAVA]JDBC 개념을 알고, 실습해보자." /><published>2024-01-21T00:00:00+09:00</published><updated>2024-01-21T00:00:00+09:00</updated><id>http://localhost:4000/java/JDBC</id><content type="html" xml:base="http://localhost:4000/java/JDBC/"><![CDATA[<h1 id="jdbc-개념">JDBC 개념</h1>
+
+<p>JDBC는 Java DataBase Collectivity의 약자로 영어 해석 그대로 자바에서 데이터베이스를 연결해주는 자바 API이다.</p>
+
+<h1 id="jdbc-동작-흐름">JDBC 동작 흐름</h1>
+
+<p><img src="http://localhost:4000/assets/images/JDBC/JDBC동작흐름.drawio.png" alt="JDBC동작흐름.drawio.png" /></p>
+
+<p><strong>Collection</strong>이라는 객체는 java와 database사이의 통로를 열어주는 역할을 해준다.</p>
+
+<p><strong>PreparedStatement</strong>라는 객체는 Collection이 열어준 통로 안에서 java로부터 Query문을 받아 database로 나르는 역할을 해준다.</p>
+
+<h1 id="jdbc-실습">JDBC 실습</h1>
+
+<ul>
+  <li>준비 : intellij, mySQL, mysql-connector.jar 파일</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Class.forName("com.mysql.cj.jdbc.Driver");
+
+</code></pre></div></div>
+
+<ul>
+  <li>드라이버 로딩</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>String url = "DB주소";
+String user = "DB이름";
+String password = "DB비밀번호";
+
+Connection conn = DriverManager.getConnection(url, user, password);
+
+</code></pre></div></div>
+
+<ul>
+  <li>java와 database 통로 열어주기</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>String sql = "query문 작성";
+
+PreparedStatement psmt = conn.prepareStatement(sql);
+
+</code></pre></div></div>
+
+<ul>
+  <li>통로 안에서 query문을 옮겨줄 객체 생성하기</li>
+</ul>
+
+<blockquote>
+  <p>String sql 변수에 들어갈 query문에는 입력받아서 처리하고 싶은 데이터를 ?로 표시해준다. <br />
+ex) String sql = “INSERT INTO mydb.bigdatamember (id, pw, b_name, age, score) VALUES (?, ?, ?, ?, ?)”;</p>
+</blockquote>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>psmt.setString(index번호, ?에 들어갈 문자열 데이터);
+psmt.setInt(index번호, ?에 들어갈 정수형 데이터);
+</code></pre></div></div>
+
+<ul>
+  <li>query문 ? 인자에 들어갈 데이터 채우기</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int row = psmt.executeUpdate(); 또는 ResultSet rs = psmt.excuteQuery();
+</code></pre></div></div>
+
+<ul>
+  <li>query문 실행하기</li>
+</ul>
+
+<blockquote>
+  <p>executeUpdate 메소드는 반환타입이 int 타입이고, sql문에 insert, delete, update를 사용하고 싶을 때 주로 사용한다. <br />
+executeQuery 메소드는 반환타입이 ResultSet 타입이고, sql문에 select를 사용하고 싶을 때 주로 사용한다.</p>
+</blockquote>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if(row &gt; 0) {} 또는 if(rs.next()) {}
+</code></pre></div></div>
+
+<ul>
+  <li>5에서 쿼리문이 잘 실행됐다면 row와 rs.next()를 이용해 확인하기</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rs.close();
+psmt.close();
+conn.close();
+</code></pre></div></div>
+
+<ul>
+  <li>사용한 자원들 반납해주기</li>
+</ul>
+
+<blockquote>
+  <p>자원을 반납할 때는 꼭! 사용한 순서 반대로 반납해주자.</p>
+</blockquote>
+
+<h1 id="느낀점">느낀점</h1>
+
+<p>JDBC로 java에서 쿼리문을 실행해보았다.</p>
+
+<p>java와 database를 따로 배울 때는 몰랐지만, JDBC를 이용해 java에서 database의 쿼리문을 실행시킬 수 있다는 점이 나중에 실제 프로젝트를 할 때 유용하게 써먹을 수 있겠다는 생각이 들었다.</p>
+
+<p>처음 써보는 java API라 아직은 익숙하지 않지만, 사용하다보면 익숙해질 것이라 믿는다.</p>]]></content><author><name>YeonDoIt</name></author><category term="JAVA" /><category term="Java" /><category term="JDBC" /><category term="DataBase" /><summary type="html"><![CDATA[JDBC 개념]]></summary></entry><entry><title type="html">[JAVA]추상 클래스와 인터페이스</title><link href="http://localhost:4000/java/AbstractClass,Interface/" rel="alternate" type="text/html" title="[JAVA]추상 클래스와 인터페이스" /><published>2024-01-20T00:00:00+09:00</published><updated>2024-01-20T00:00:00+09:00</updated><id>http://localhost:4000/java/AbstractClass,Interface</id><content type="html" xml:base="http://localhost:4000/java/AbstractClass,Interface/"><![CDATA[<h1 id="공통점">공통점</h1>
+
+<ol>
+  <li>추상 메소드를 가지고 있어야 한다.</li>
+  <li>인스턴스화 할 수 없다. (인스턴스화 하려면 추상 메소드를 main에서 구현해야 함)</li>
+  <li>추상 메소드를 반드시 구현해야 한다. <strong>(강제성)</strong></li>
+</ol>
+
+<h1 id="차이점">차이점</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>차이점</th>
+      <th>추상클래스</th>
+      <th>인터페이스</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>키워드</td>
+      <td>abstract</td>
+      <td>interface</td>
+    </tr>
+    <tr>
+      <td>필드</td>
+      <td>제한 없음</td>
+      <td>static final</td>
+    </tr>
+    <tr>
+      <td>접근 제한자</td>
+      <td>제한 없음</td>
+      <td>public</td>
+    </tr>
+    <tr>
+      <td>메소드</td>
+      <td>제한 없음</td>
+      <td>abstract, default, static, private</td>
+    </tr>
+    <tr>
+      <td>상속/구현 키워드</td>
+      <td>extends</td>
+      <td>implements</td>
+    </tr>
+    <tr>
+      <td>다중 상속 가능 여부</td>
+      <td>불가능</td>
+      <td>가능</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="추상-클래스와-인터페이스-사용">추상 클래스와 인터페이스 사용</h1>
+
+<h2 id="추상-클래스">추상 클래스</h2>
+
+<ul>
+  <li>추상 클래스는 이를 상속할 각 객체들의 공통점을 찾아 <strong>추상화</strong>시켜 놓은 것으로 자식 클래스로 <strong>확장</strong>시키는 개념</li>
+  <li>상속받는 클래스들의 필드와 메소드가 매번 중복 정의 될 때 <strong>유지 및 보수</strong>를 위해 사용</li>
+</ul>
+
+<blockquote>
+  <p>추상화 : 클래스 간의 공통점을 찾아내서 공통의 부모를 만드는 작업 <br />
+구체화 : 상속을 통해 클래스를 구현, 확장하는 작업</p>
+</blockquote>
+
+<h2 id="인터페이스">인터페이스</h2>
+
+<ul>
+  <li>추상 메소드를 선언만하고 구현은 떠넘겨 <strong>어떤 구조의 틀</strong>을 만들어 놓는 개념</li>
+  <li><strong>다중 상속</strong>이 필요하거나 <strong>관련성이 없는 클래스</strong>를  묶기 위해 사용</li>
+</ul>
+
+<h1 id="interface---abstract---concrete-class-패턴">Interface - Abstract - Concrete Class 패턴</h1>
+
+<p>인터페이스는 필드를 상수만 가질 수 있어 중복된 필드가 있을 때 해결할 수 없고,</p>
+
+<p>추상 클래스는 다중 상속이 불가능하다는 문제점이 있다.</p>
+
+<p>이를 해결하기 위해 등장한 디자인 패턴으로 Interface - Abstract - Concrete Class 패턴이 있다.</p>
+
+<blockquote>
+  <p>Interface - Abstract - Concrete Class 패턴의 단점으로 다른 클래스의 상속을 받아야 하는 경우 이 패턴을 사용할 수 없다. <br />
+이런 경우 Adapter 패턴을 이용한다고 한다. 나중에 기회가 되면 Adapter 패턴도 공부하자.</p>
+</blockquote>]]></content><author><name>YeonDoIt</name></author><category term="JAVA" /><category term="Java" /><category term="Abstract" /><category term="Interface" /><summary type="html"><![CDATA[공통점]]></summary></entry><entry><title type="html">프로그래머스) 소수 만들기</title><link href="http://localhost:4000/algorithm/AlgorithmPrimeNumber/" rel="alternate" type="text/html" title="프로그래머스) 소수 만들기" /><published>2024-01-13T00:00:00+09:00</published><updated>2024-01-13T00:00:00+09:00</updated><id>http://localhost:4000/algorithm/AlgorithmPrimeNumber</id><content type="html" xml:base="http://localhost:4000/algorithm/AlgorithmPrimeNumber/"><![CDATA[<h1 id="문제">문제</h1>
+
+<h3 id="문제-설명"><strong>문제 설명</strong></h3>
+
+<p>주어진 숫자 중 3개의 수를 더했을 때 소수가 되는 경우의 개수를 구하려고 합니다. 숫자들이 들어있는 배열 nums가 매개변수로 주어질 때, nums에 있는 숫자들 중 서로 다른 3개를 골라 더했을 때 소수가 되는 경우의 개수를 return 하도록 solution 함수를 완성해주세요.</p>
+
+<h3 id="제한사항">제한사항</h3>
+
+<ul>
+  <li>nums에 들어있는 숫자의 개수는 3개 이상 50개 이하입니다.</li>
+  <li>nums의 각 원소는 1 이상 1,000 이하의 자연수이며, 중복된 숫자가 들어있지 않습니다.</li>
+</ul>
+
+<h3 id="입출력-예">입출력 예</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>nums</th>
+      <th>result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>[1,2,3,4]</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>[1,2,7,6,4]</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="입출력-예-설명">입출력 예 설명</h3>
+
+<p>입출력 예 #1</p>
+
+<p>[1,2,4]를 이용해서 7을 만들 수 있습니다.</p>
+
+<p>입출력 예 #2</p>
+
+<p>[1,2,4]를 이용해서 7을 만들 수 있습니다.</p>
+
+<p>[1,4,6]을 이용해서 11을 만들 수 있습니다.</p>
+
+<p>[2,4,7]을 이용해서 13을 만들 수 있습니다.</p>
+
+<p>[4,6,7]을 이용해서 17을 만들 수 있습니다.</p>
+
+<h1 id="풀이">풀이</h1>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+	<span class="kd">public</span> <span class="kt">int</span> <span class="nf">solution</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>    
+		<span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+		<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+		    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+		        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span> <span class="o">{</span>
+		            <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">+</span> <span class="n">nums</span><span class="o">[</span><span class="n">k</span><span class="o">];</span>
+		            <span class="kt">int</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+		            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">num</span><span class="o">;</span> <span class="n">m</span><span class="o">++)</span> <span class="o">{</span>
+		                <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">%</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+		                    <span class="k">break</span><span class="o">;</span>
+		                <span class="k">else</span>
+		                    <span class="n">cnt</span><span class="o">++;</span>
+		            <span class="o">}</span>
+		            <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">==</span> <span class="n">cnt</span><span class="o">)</span>
+		                    <span class="n">answer</span><span class="o">++;</span>
+				    <span class="o">}</span>
+				<span class="o">}</span>
+		<span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">answer</span><span class="o">;</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>내가 푼 풀이 방법이다.</p>
+
+<p>위의 문제를 해결하기 위해서 크게 두 가지를 생각했다.</p>
+
+<ol>
+  <li>nums 배열에서 서로 다른 3개의 수를 어떻게 가져올 것인가.</li>
+  <li>소수를 어떻게 판별할 것인가.</li>
+</ol>
+
+<h2 id="1--nums-배열에서-서로-다른-3개의-수를-어떻게-가져올-것인가">1 . nums 배열에서 서로 다른 3개의 수를 어떻게 가져올 것인가.</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+		    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+		        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span> <span class="o">{</span>
+</code></pre></div></div>
+
+<p>for문 3개를 사용했다.</p>
+
+<p>위의 코드를 사용하면 i, j, k 변수가 반복문을 돌면서 숫자 3개의 배열 인덱스를 가져오는 모든 경우를 다룰 수 있다.</p>
+
+<h2 id="2--소수를-어떻게-판별할-것인가">2 . 소수를 어떻게 판별할 것인가.</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	
+	<span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">+</span> <span class="n">nums</span><span class="o">[</span><span class="n">k</span><span class="o">];</span>
+	<span class="kt">int</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+	<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">num</span><span class="o">;</span> <span class="n">m</span><span class="o">++)</span> <span class="o">{</span>
+		<span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">%</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+			<span class="k">break</span><span class="o">;</span>
+		<span class="k">else</span>
+			<span class="n">cnt</span><span class="o">++;</span>
+	<span class="o">}</span>
+	<span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">==</span> <span class="n">cnt</span><span class="o">)</span>
+		<span class="n">answer</span><span class="o">++;</span>
+</code></pre></div></div>
+
+<p>소수는 약수가 1과 자기 자신인 수이다.</p>
+
+<p>num을 1과 num사이의 수로 나눴을 때, 하나라도 나누어 떨어지면 소수가 아니고, <strong>모든 수가 나누어 떨어지지 않아야 소수</strong>이다.</p>
+
+<p>cnt는 나누어 떨어지지 않는 횟수를 세기 위한 변수이다.</p>
+
+<p>num이 소수라면 cnt와 (num - 2)가 같아진다.</p>
+
+<p>소수를 검사할 때 1과 자기자신은 모든 수의 약수이기 때문에 -2를 해주었다.</p>
+
+<p>예를 들어, 7이라는 수는 소수이다. 이를 알기 위해 우리는 7을 1 ~ 7 사이의 수들을 나누었을 때 나누어 떨어지지 않는다. 1과 7을 제외하고 2, 3, 4, 5, 6 총 5개의 수가 나누어 떨어지지 않는다.</p>
+
+<p>ex) num - 2 == cnt → 7 - 2 = 5</p>
+
+<h1 id="정리">정리</h1>
+
+<p>내가 짠 코드는 for 반복문이 3번이나 쓰인다.</p>
+
+<p>시간 복잡도가 O(n^3)나 된다는 말이다.</p>
+
+<p>하지만, 혼자 고민도 하고 열심히 찾아본 결과 어쩔 수 없이 위의 코드를 짜야 할 것 같다.</p>
+
+<p>(배열에서 중복 없이 숫자 3개를 꺼내오는 좋은 방법이 있을까….)</p>
+
+<p>소수를 판별하는 더 좋은 방법이 있을 것 같아서 문제를 풀고 나서 찾아봤다.</p>
+
+<ul>
+  <li>2부터 num 의 제곱근의 정수부분까지만 검사하는 방법</li>
+  <li>에라토스테네스의 체를 이용하는 방법</li>
+</ul>
+
+<p>이렇게 두 가지 방법이 더 있다.</p>
+
+<p>첫 번째 방법은 내가 풀이한 방법에서 수정할 수 있는 방향이 있다.</p>
+
+<p>두 번째 방법인 에라토스테네스의 체를 이용하는 것은 위의 문제를 풀이하는 데에 조금 어려움이 있다.</p>
+
+<p>왜냐하면 에라토스테네스는 소수인 수의 배수들을 지워나가면서 소수를 찾는 방법인데 위의 문제는 주어진 수가 소수인가를 판별하는 문제이기 때문에 문제를 해결하는 방향에 있어 두 개가 다르다고 생각한다.</p>]]></content><author><name>YeonDoIt</name></author><category term="Algorithm" /><category term="Algorithm" /><category term="CodingTest" /><summary type="html"><![CDATA[문제]]></summary></entry><entry><title type="html">싸피 11기 인터뷰 탈락 후기(광주)</title><link href="http://localhost:4000/review/SsafyReview/" rel="alternate" type="text/html" title="싸피 11기 인터뷰 탈락 후기(광주)" /><published>2023-12-22T00:00:00+09:00</published><updated>2023-12-22T00:00:00+09:00</updated><id>http://localhost:4000/review/SsafyReview</id><content type="html" xml:base="http://localhost:4000/review/SsafyReview/"><![CDATA[<h1 id="지원-동기">지원 동기</h1>
+
+<p>나는 지방대 주전공 수학과, 복수전공 컴퓨터공학과를 졸업했다.<br />
+대학 생활 때부터 코딩에 관심이 생겨서 복수전공을 결심했다.<br />
+나의 기대와는 달리 컴퓨터공학 복수전공을 하면서 만족스러운 시간을 보내지는 못했다.<br />
+졸업도 나의 실수로 한 학기 늦어지는 바람에 당시 공부보다는 알바에 더 집중했던 것 같다.<br />
+그러다 주변에서 싸피를 모집한다는 것을 말해주었고, 졸업 전부터 꼭 하고 싶었던 싸피 11기에 도전했다.</p>
+
+<h1 id="모집-일정">모집 일정</h1>
+
+<p>모집 기간: 2023.10.23(월) ~ 2023.11.06(월)<br />
+에세이 및 SW적성진단: 2023.11.07(화) ~ 2023.11.18(토) 23:59 까지<br />
+(SW적성진단 비전공자 2023.11.11(토), 전공자 2023.11.19(일))<br />
+SW적성진단 결과: 2023.11.28(화)<br />
+인터뷰 결과: 2023.12.21(목)</p>
+
+<hr />
+
+<h1 id="지원-과정">지원 과정</h1>
+
+<h2 id="1-에세이">1. 에세이</h2>
+<p>마감 기한 3일 전에 글을 다 썼다.<br />
+남은 3일동안 계속 읽어보면서 큰 틀에서 벗어나지 않도록 문장을 고쳤고, 마감 당일 일이 있어 마감 1시간 전에 제출했다. (나는 그러지 못했지만 에세이를 완성해놓고 가능하면 하루 전에는 제출하는 것이 좋을 것 같다.)</p>
+
+<p>싸피 합격/불합격 후기들을 찾아다녀보면서 결국 제가 글을 쓴 방향은 코딩을 어떻게 알게되었는지, 이후에 해본 것이 있는지, 그 과정에서 어떤 어려움이 있었는지, 그 어려움을 싸피가 어떻게 해결해 줄 것인지를 적어냈다.</p>
+
+<h2 id="2-sw적성진단비전공">2. SW적성진단(비전공)</h2>
+<p>복수전공을 컴퓨터공학을 졸업했지만, 코딩테스트는 자신이 없었기에 비전공으로 신청했다.</p>
+
+<p>SW적성진단(비전공)은 온라인으로 수리/추리 논리력시험 40분 + CT(Computational Thinking) 30분 = 총 70분 시험을 본다.</p>
+
+<p>결과는..</p>
+
+<!-- <center>
+<a href="https://ibb.co/LCDWR0L"><img src="https://i.ibb.co/0fpS2ng/essay.png" alt="essay" border="0"></a>
+</center> -->
+<p><img src="http://localhost:4000/assets/images/SsafyReview/essay.png" alt="essay" /></p>
+
+<h2 id="3-인터뷰">3. 인터뷰</h2>
+<p>에세이 + SW적성진단 결과가 나오고 하루 뒤에 면접 날짜를 알려준다.<br />
+다른 분들은 면접 스터디를 많이 하시는 것 같아 저도 면접 스터디 고민을 많이 했다.<br />
+고민하던 중에 지인이 모의 면접을 봐주고, 면접 준비를 도와주신다고 하셔서 나는 면접 스터디를 안했다…<br />
+하지만, 나처럼 면접 경험, 발표 경험이 없다면 추천한다!<br />
+혼자서도 잘할 수 있다고 생각했는데 남의 앞에서 말하는 것이 보통 쉬운 일은 아니었다.<br />
+면접 준비 첫 날에는 지인이 물어보는 것에 아무것도 대답하지 못하고 멘탈이 많이 나가버렸었지만, 그 덕분에 면접가서는 나름 답변을 잘하고 왔다고 생각한다.</p>
+
+<p>인터뷰는 PT면접 + 인성면접을 준비했다.</p>
+
+<p>PT면접은 IT키워드들의 장단점, 극복방안을 정리해 본 다음 기사를 보고 &lt;배경(도입/개념/장점) - 활용 - 리스크 - 극복방안 + @출처/최신동향&gt; 순으로 말하는 연습을 했다.<br />
+(사실 기사를 보고 연습하는 것은 감이 잘 오질 않았다. 그래서 ‘면접 당일날 나에게 맡기자’는 마음에 소홀히 했습니다. 이 글을 보시는 싸피 준비하는 분들은 소홀히 하지 마시길..)<br />
+IT키워드는 노코드/로우코드, 생성형AI, 클라우드컴퓨팅, 핀테크, 자율 주행 자동차, 메타버스, VR/AR/MR/XR, NFT, 블록체인, 5G 이정도만 정리했다.</p>
+
+<p>인성면접은 지인의 추천대로 준비했고, 실제 면접에서 준비한 질문이 나오지 않아도 내가 준비한 답변 내에서 답변을 하도록 연습했다.</p>
+
+<p>1분 자기소개<br />
+왜 싸피왔는지<br />
+왜 개발자가 되고 싶은지<br />
+앱, 웹, 메타버스 중 가장 하고싶은 개발 업무<br />
+어떤 회사 가고 싶은지<br />
+싸피를 통해 어떤 것을 얻고 싶은지<br />
+어떤 자세로 교육을 들을 것인지<br />
+그 후 어떤 개발자로 성장하고 싶은지<br />
+9 to 6인데 안힘들겠는지<br />
+위와 같은 스케쥴로 인해 중도하차하고 싶을 시 어떻게 극복할지<br />
+팀원간 불화가 있을 때는 어떻게 해결할지 또는 중도하차하고 싶을 시에 어떻게 극복할지<br />
+만약 한명이 탈주를 한다면 어떻게 극복을 해낼 것인지<br />
+마지막 한마디</p>
+
+<p>+제가 20살 이후로 했던 경험들을 정리했다.</p>
+
+<p>결과는..</p>
+
+<!-- <center>
+<a href="https://ibb.co/PNWmwjT"><img src="https://i.ibb.co/W6zxg5D/interview.png" alt="interview" border="0"></a>
+</center> -->
+<p><img src="http://localhost:4000/assets/images/SsafyReview/interview.png" alt="interview" /></p>
+
+<h1 id="마무리">마무리</h1>
+<p>면접장을 나오면서는 정말 허탈해서 아무 생각이 나질 않았다.<br />
+일단 나의 가장 큰 실수는 크게 두 가지라 생각한다.</p>
+
+<ol>
+  <li>
+    <p>pt면접에서 아이디어가 생각이 안나 안하느니만 못하게 발표를 했다. (준비를 정말 많이 했어야 했고, 부족하다고 생각했지만, 소홀히 했기 때문)</p>
+  </li>
+  <li>
+    <p>인성면접에서 열심히 하고자 하는 의지를 제대로 못보여줬다. (내 답변에 내가 그대로 말려들어가버려서 자신감 없게 보였을 수도 있고, 싸피를 하고자하는 의지가 부족해 보였을 것 같다.)</p>
+  </li>
+</ol>
+
+<p>돌이켜보면 두 달이라는 시간동안 싸피를 준비했기 때문에 결과는 너무 아쉽다.<br />
+하지만, 이 과정 속에서 나는 분명 한 층 성장했을 것이라 믿는다.<br />
+싸피를 탈락하고 내가 하고 싶은 것이 무엇인지 진지하게 생각할 수 있었다.<br />
+나는 앞으로도 백엔드 개발자라는 꿈을 향해 달려나갈 것이다.</p>]]></content><author><name>YeonDoIt</name></author><category term="Review" /><category term="Ssafy" /><category term="Interview" /><summary type="html"><![CDATA[지원 동기]]></summary></entry></feed>
